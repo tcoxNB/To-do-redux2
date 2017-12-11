@@ -6,30 +6,19 @@ export default class TodoList extends Component {
         super(props);
 
         this.state = {
-            inputText: "",
-            displayType: 'all',
-            todos: []
+            inputText: ''
         };
     }
 
     onSubmit = event => {
         event.preventDefault();
-
         const trimmed = this.state.inputText.trim();
         if (trimmed.length > 0) {
-            this.addTodo(trimmed);
+            this.props.addTodo(trimmed);
             this.setState({
                 inputText: ''
             });
         }
-    };
-
-    addTodo = text => {
-        this.setState({
-            todos: [...this.state.todos, {text, completed: false}]
-            //Another good way to do this is -=> todos: this.state.todos.concat({text, completed: false})
-            //BAD WAY -=> todos: this.state.todos.push({text, completed: false})
-        });
     };
 
     handleOnChange = event => {
@@ -45,29 +34,20 @@ export default class TodoList extends Component {
     };
 
     toggle(id) {
-        const newTodos = this.state.todos.map((item, index) => {
-            if(index === id) {
-                return Object.assign(item, {
-                    completed: !item.completed
-                })
-            }
-            return item;
-        });
-        this.setState({todos: newTodos})
+        this.props.toggleTodo(id)
     };
 
     renderTodoList() {
         let filteredList = [];
-        console.log(this.props.filter)
-        switch(this.props.filter){
+        switch(this.props.displayType){
             case 'active':
-                filteredList = this.state.todos.filter(item => !item.completed);
+                filteredList = this.props.todos.filter(item => !item.completed);
 ;                break;
             case 'completed':
-                filteredList = this.state.todos.filter(item => item.completed);
+                filteredList = this.props.todos.filter(item => item.completed);
                 break;
             default:
-                filteredList = [...this.state.todos];
+                filteredList = [...this.props.todos];
         }
 
         return filteredList.map((item, index) => (

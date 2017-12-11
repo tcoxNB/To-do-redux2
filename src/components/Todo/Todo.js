@@ -1,5 +1,14 @@
 import React from 'react';
 import TodoList from "./TodoList";
+import {createStore} from 'redux';
+import {Provider} from 'react-redux';
+import Container from './Container';
+import reducer from './reducer';
+
+const store = createStore(
+    reducer,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 class Todo extends React.Component {
     constructor(props) {
@@ -15,14 +24,16 @@ class Todo extends React.Component {
 
     render() {
         return (
-            <div className="container">
-                <div className="columns">
-                    <div className="column is-2"></div>
-                    <div className="column is-8">
-                        <TodoList setVisibilityFilter={this.setVisibilityFilter} filter={this.state.filter}/>
+            <Provider store={store}>
+                <div className="container">
+                    <div className="columns">
+                        <div className="column is-2"></div>
+                        <div className="column is-8">
+                            <Container />
+                        </div>
                     </div>
                 </div>
-            </div>
+            </Provider>
         );
     }
 }
